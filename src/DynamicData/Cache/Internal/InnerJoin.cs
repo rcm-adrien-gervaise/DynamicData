@@ -117,6 +117,9 @@ internal class InnerJoin<TLeft, TLeftKey, TRight, TRightKey, TDestination>(IObse
                     return joinedCache.CaptureChanges();
                 });
 
-                return new CompositeDisposable(leftLoader.Merge(rightLoader).SubscribeSafe(observer), leftCache, rightCache, rightShare.Connect());
+                lock (locker)
+                {
+                    return new CompositeDisposable(leftLoader.Merge(rightLoader).SubscribeSafe(observer), leftCache, rightCache, rightShare.Connect());
+                }
             });
 }
